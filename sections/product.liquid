@@ -1,52 +1,116 @@
-{% comment %}
-  This section is used in the product template to render product page with
-  media, content, and add-to-cart form.
 
-  https://shopify.dev/docs/storefronts/themes/architecture/templates/product
-{% endcomment %}
 
-<div class="product-images">
-  {% for image in product.images %}
-    {% render 'image', class: 'product-image', image: image %}
-  {% endfor %}
+<div class="relative w-full max-w-7xl mx-auto px-10 py-8">
+  
+  {% if section.settings.title != blank %}
+    <h2 class="text-2xl font-bold text-gray-900 mb-6">{{ section.settings.title }}</h2>
+  {% endif %}
+
+  <button id="prevBtn" class="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white border border-gray-200 shadow-lg rounded-full p-3 hover:bg-gray-50 transition focus:outline-none flex items-center justify-center">
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+    </svg>
+  </button>
+<div id="carouselTrack" class="flex gap-6 overflow-x-auto snap-x snap-mandatory scroll-smooth py-4 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+
+    {%- assign collection = section.settings.collection -%}
+    
+    {%- if collection != blank and collection.products_count > 0 -%}
+      {%- for product in collection.products limit: section.settings.max_products -%}
+        
+        <div class="snap-start flex-none w-[85%] sm:w-[45%] md:w-[30%] lg:w-[23%] bg-white rounded-xl shadow-md overflow-hidden border border-gray-100 hover:shadow-xl transition-shadow duration-300">
+          
+          <a href="{{ product.url }}" class="block">
+            <div class="w-full h-56 bg-gray-200">
+              {% if product.featured_image %}
+                <img src="{{ product.featured_image | image_url: width: 400 }}" alt="{{ product.title | escape }}" class="w-full h-full object-cover">
+              {% else %}
+                {{ 'product-1' | placeholder_svg_tag: 'w-full h-full object-cover bg-gray-100' }}
+              {% endif %}
+            </div>
+            
+            <div class="p-5 flex flex-col gap-2">
+              <h3 class="text-lg font-semibold text-gray-900 truncate">{{ product.title }}</h3>
+              <p class="text-xl font-bold text-indigo-600">{{ product.price | money }}</p>
+            </div>
+          </a>
+
+        </div>
+
+      {%- endfor -%}
+    {%- else -%}
+      {%- for i in (1..6) -%}
+         <div class="snap-start flex-none w-[85%] sm:w-[45%] md:w-[30%] lg:w-[23%] bg-white rounded-xl shadow-md overflow-hidden border border-gray-100">
+            <div class="w-full h-56 bg-gray-200 flex items-center justify-center">
+              <span class="text-gray-500">Select Collection</span>
+            </div>
+         </div>
+      {%- endfor -%}
+    {%- endif -%}
+    
+  </div>
+
+  <button id="nextBtn" class="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white border border-gray-200 shadow-lg rounded-full p-3 hover:bg-gray-50 transition focus:outline-none flex items-center justify-center">
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+    </svg>
+  </button>
+
 </div>
 
-<div class="product-info">
-  <h1>{{ product.title }}</h1>
-  <p>{{ product.price | money }}</p>
-  <p>{{ product.description }}</p>
-</div>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const track = document.getElementById('carouselTrack');
+  const prevBtn = document.getElementById('prevBtn');
+  const nextBtn = document.getElementById('nextBtn');
 
-<div class="product-form">
-  {% form 'product', product %}
-    {% assign current_variant = product.selected_or_first_available_variant %}
+  if(track && prevBtn && nextBtn) {
+      const getScrollAmount = () => {
+        const card = track.querySelector('.flex-none');
+        return card ? card.offsetWidth + 24 : 300; 
+      };
 
-    <select name="id">
-      {% for variant in product.variants %}
-        <option
-          value="{{ variant.id }}"
-          {% if variant == current_variant %}
-            selected="selected"
-          {% endif %}
-        >
-          {{ variant.title }} - {{ variant.price | money }}
-        </option>
-      {% endfor %}
-    </select>
+      nextBtn.addEventListener('click', () => {
+        track.scrollBy({ left: getScrollAmount(), behavior: 'smooth' });
+      });
 
-    <input type="text" name="quantity" min="1" value="1">
-
-    <input type="submit" value="Add to cart">
-    {{ form | payment_button }}
-  {% endform %}
-</div>
+      prevBtn.addEventListener('click', () => {
+        track.scrollBy({ left: -getScrollAmount(), behavior: 'smooth' });
+      });
+  }
+});
+</script>
 
 {% schema %}
 {
-  "name": "t:general.product",
-  "settings": [],
-  "disabled_on": {
-    "groups": ["header", "footer"]
-  }
+  "name": "Custom Product Carousel",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "Featured Products"
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Select Collection"
+    },
+    {
+      "type": "range",
+      "id": "max_products",
+      "label": "Maximum products to show",
+      "min": 4,
+      "max": 24,
+      "step": 1,
+      "default": 12
+    }
+  ],
+  "presets": [
+    {
+      "name": "Custom Product Carousel",
+      "category": "Custom"
+    }
+  ]
 }
 {% endschema %}
