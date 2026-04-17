@@ -1,56 +1,263 @@
-<footer>
-  <div class="footer__copyright">
-    &copy;
-    {{ 'now' | date: '%Y' }}
-    {{ shop.name | link_to: routes.root_url }}, {{ powered_by_link }}
+{%- liquid
+  assign col1_title = section.settings.col1_title | default: 'Products'
+  assign col2_title = section.settings.col2_title | default: 'Solutions'
+  assign col3_title = section.settings.col3_title | default: 'Resources'
+  assign col4_title = section.settings.col4_title | default: 'Developers'
+  assign col5_title = section.settings.col5_title | default: 'Company'
+  assign brand_name = section.settings.brand_name | default: shop.name
+  assign cta1_label = section.settings.cta1_label | default: 'Start For Free'
+  assign cta1_url   = section.settings.cta1_url   | default: '#'
+  assign cta2_label = section.settings.cta2_label | default: 'Book a Demo'
+  assign cta2_url   = section.settings.cta2_url   | default: '#'
+-%}
+
+<footer class="bg-[#161616] w-full overflow-hidden">
+  <div class="max-w-[1400px] mx-auto px-6 sm:px-10 lg:px-14 pt-16 pb-12">
+    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-10 lg:gap-6">
+
+      <div>
+        <p class="text-[#666] text-[10px] font-medium tracking-[0.2em] uppercase mb-5">{{ col1_title }}</p>
+        <ul class="flex flex-col gap-3">
+          {%- for i in (1..6) -%}
+            {%- assign lbl = 'col1_link' | append: i | append: '_label' -%}
+            {%- assign url = 'col1_link' | append: i | append: '_url'   -%}
+            {%- if section.settings[lbl] != blank -%}
+              <li>
+                <a href="{{ section.settings[url] | default: '#' }}"
+                   class="text-[#e8e4d8] text-2xl font-medium hover:text-white transition-colors duration-200 leading-tight block">
+                  {{ section.settings[lbl] }}
+                </a>
+              </li>
+            {%- endif -%}
+          {%- endfor -%}
+        </ul>
+      </div>
+
+      <div>
+        <p class="text-[#666] text-[10px] font-medium tracking-[0.2em] uppercase mb-5">{{ col2_title }}</p>
+        <ul class="flex flex-col gap-3">
+          {%- for i in (1..6) -%}
+            {%- assign lbl = 'col2_link' | append: i | append: '_label' -%}
+            {%- assign url = 'col2_link' | append: i | append: '_url'   -%}
+            {%- if section.settings[lbl] != blank -%}
+              <li>
+                <a href="{{ section.settings[url] | default: '#' }}"
+                   class="text-[#e8e4d8] text-2xl font-medium hover:text-white transition-colors duration-200 leading-tight block">
+                  {{ section.settings[lbl] }}
+                </a>
+              </li>
+            {%- endif -%}
+          {%- endfor -%}
+        </ul>
+      </div>
+
+      <div>
+        <p class="text-[#666] text-[10px] font-medium tracking-[0.2em] uppercase mb-5">{{ col3_title }}</p>
+        <ul class="flex flex-col gap-3">
+          {%- for i in (1..6) -%}
+            {%- assign lbl = 'col3_link' | append: i | append: '_label' -%}
+            {%- assign url = 'col3_link' | append: i | append: '_url'   -%}
+            {%- if section.settings[lbl] != blank -%}
+              <li>
+                <a href="{{ section.settings[url] | default: '#' }}"
+                   class="text-[#e8e4d8] text-2xl font-medium hover:text-white transition-colors duration-200 leading-tight block">
+                  {{ section.settings[lbl] }}
+                </a>
+              </li>
+            {%- endif -%}
+          {%- endfor -%}
+        </ul>
+      </div>
+
+      <div>
+        <p class="text-[#666] text-[10px] font-medium tracking-[0.2em] uppercase mb-5">{{ col4_title }}</p>
+        <ul class="flex flex-col gap-3">
+          {%- for i in (1..6) -%}
+            {%- assign lbl = 'col4_link' | append: i | append: '_label' -%}
+            {%- assign url = 'col4_link' | append: i | append: '_url'   -%}
+            {%- if section.settings[lbl] != blank -%}
+              <li>
+                <a href="{{ section.settings[url] | default: '#' }}"
+                   class="text-[#e8e4d8] text-2xl font-medium hover:text-white transition-colors duration-200 leading-tight block">
+                  {{ section.settings[lbl] }}
+                </a>
+              </li>
+            {%- endif -%}
+          {%- endfor -%}
+        </ul>
+      </div>
+
+      <div>
+        <p class="text-[#666] text-[10px] font-medium tracking-[0.2em] uppercase mb-5">{{ col5_title }}</p>
+        <ul class="flex flex-col gap-3 mb-8">
+          {%- for i in (1..4) -%}
+            {%- assign lbl = 'col5_link' | append: i | append: '_label' -%}
+            {%- assign url = 'col5_link' | append: i | append: '_url'   -%}
+            {%- if section.settings[lbl] != blank -%}
+              <li>
+                <a href="{{ section.settings[url] | default: '#' }}"
+                   class="text-[#e8e4d8] text-2xl font-medium hover:text-white transition-colors duration-200 leading-tight block">
+                  {{ section.settings[lbl] }}
+                </a>
+              </li>
+            {%- endif -%}
+          {%- endfor -%}
+        </ul>
+        <ul class="flex flex-col gap-2">
+          {%- if section.settings.legal1_label != blank -%}
+            <li><a href="{{ section.settings.legal1_url | default: '#' }}" class="text-[#555] text-[10px] font-medium tracking-[0.15em] uppercase hover:text-[#999] transition-colors duration-200">{{ section.settings.legal1_label }}</a></li>
+          {%- endif -%}
+          {%- if section.settings.legal2_label != blank -%}
+            <li><a href="{{ section.settings.legal2_url | default: '#' }}" class="text-[#555] text-[10px] font-medium tracking-[0.15em] uppercase hover:text-[#999] transition-colors duration-200">{{ section.settings.legal2_label }}</a></li>
+          {%- endif -%}
+          {%- if section.settings.legal3_label != blank -%}
+            <li><a href="{{ section.settings.legal3_url | default: '#' }}" class="text-[#555] text-[10px] font-medium tracking-[0.15em] uppercase hover:text-[#999] transition-colors duration-200">{{ section.settings.legal3_label }}</a></li>
+          {%- endif -%}
+        </ul>
+
+        <p class="text-[#444] text-[10px] font-medium tracking-[0.12em] uppercase mt-6">
+          &copy; {{ brand_name }} {{ 'now' | date: '%Y' }}
+        </p>
+      </div>
+
+    </div>
   </div>
 
-  <div class="footer__links">
-    {% for link in section.settings.menu.links %}
-      {{ link.title | link_to: link.url }}
-    {% endfor %}
+  <div class="w-full overflow-hidden leading-none pointer-events-none select-none" aria-hidden="true">
+    <p class="text-[#e8e4d8] font-black uppercase tracking-tight whitespace-nowrap
+              text-[20vw] leading-[0.82] px-6 sm:px-10 lg:px-14 mb-20">
+      {{ brand_name }}
+    </p>
   </div>
 
-  <div class="footer__payment">
-    {% if section.settings.show_payment_icons %}
-      {% for type in shop.enabled_payment_types %}
-        {{ type | payment_type_svg_tag }}
-      {% endfor %}
-    {% endif %}
-  </div>
 </footer>
-
-{% stylesheet %}
-  footer {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 2rem;
-  }
-  footer a {
-    text-decoration: none;
-    color: var(--color-foreground);
-  }
-  footer .footer__links,
-  footer .footer__payment {
-    display: flex;
-    gap: 1rem;
-  }
-{% endstylesheet %}
 
 {% schema %}
 {
-  "name": "t:general.footer",
+  "name": "Retool Footer",
+  "tag": "section",
   "settings": [
     {
-      "type": "link_list",
-      "id": "menu",
-      "label": "t:labels.menu"
+      "type": "header",
+      "content": "Brand"
     },
     {
-      "type": "checkbox",
-      "id": "show_payment_icons",
-      "label": "t:labels.show_payment_icons",
-      "default": true
+      "type": "text",
+      "id": "brand_name",
+      "label": "Brand / Store name",
+      "info": "Shown in the large wordmark and copyright"
+    },
+
+    {
+      "type": "header",
+      "content": "CTA Buttons"
+    },
+    { "type": "text", "id": "cta1_label", "label": "Button 1 label", "default": "Start For Free" },
+    { "type": "url",  "id": "cta1_url",   "label": "Button 1 URL" },
+    { "type": "text", "id": "cta2_label", "label": "Button 2 label", "default": "Book a Demo" },
+    { "type": "url",  "id": "cta2_url",   "label": "Button 2 URL" },
+
+    {
+      "type": "header",
+      "content": "Column 1"
+    },
+    { "type": "text", "id": "col1_title",         "label": "Column heading", "default": "Products" },
+    { "type": "text", "id": "col1_link1_label",   "label": "Link 1 label",   "default": "Apps" },
+    { "type": "url",  "id": "col1_link1_url",     "label": "Link 1 URL" },
+    { "type": "text", "id": "col1_link2_label",   "label": "Link 2 label",   "default": "Workflows" },
+    { "type": "url",  "id": "col1_link2_url",     "label": "Link 2 URL" },
+    { "type": "text", "id": "col1_link3_label",   "label": "Link 3 label",   "default": "Database" },
+    { "type": "url",  "id": "col1_link3_url",     "label": "Link 3 URL" },
+    { "type": "text", "id": "col1_link4_label",   "label": "Link 4 label",   "default": "Mobile" },
+    { "type": "url",  "id": "col1_link4_url",     "label": "Link 4 URL" },
+    { "type": "text", "id": "col1_link5_label",   "label": "Link 5 label" },
+    { "type": "url",  "id": "col1_link5_url",     "label": "Link 5 URL" },
+    { "type": "text", "id": "col1_link6_label",   "label": "Link 6 label" },
+    { "type": "url",  "id": "col1_link6_url",     "label": "Link 6 URL" },
+
+    {
+      "type": "header",
+      "content": "Column 2"
+    },
+    { "type": "text", "id": "col2_title",         "label": "Column heading", "default": "Solutions" },
+    { "type": "text", "id": "col2_link1_label",   "label": "Link 1 label",   "default": "AI Apps" },
+    { "type": "url",  "id": "col2_link1_url",     "label": "Link 1 URL" },
+    { "type": "text", "id": "col2_link2_label",   "label": "Link 2 label",   "default": "External Apps" },
+    { "type": "url",  "id": "col2_link2_url",     "label": "Link 2 URL" },
+    { "type": "text", "id": "col2_link3_label",   "label": "Link 3 label",   "default": "Integrations" },
+    { "type": "url",  "id": "col2_link3_url",     "label": "Link 3 URL" },
+    { "type": "text", "id": "col2_link4_label",   "label": "Link 4 label",   "default": "Self-hosting" },
+    { "type": "url",  "id": "col2_link4_url",     "label": "Link 4 URL" },
+    { "type": "text", "id": "col2_link5_label",   "label": "Link 5 label" },
+    { "type": "url",  "id": "col2_link5_url",     "label": "Link 5 URL" },
+    { "type": "text", "id": "col2_link6_label",   "label": "Link 6 label" },
+    { "type": "url",  "id": "col2_link6_url",     "label": "Link 6 URL" },
+
+    {
+      "type": "header",
+      "content": "Column 3"
+    },
+    { "type": "text", "id": "col3_title",         "label": "Column heading", "default": "Resources" },
+    { "type": "text", "id": "col3_link1_label",   "label": "Link 1 label",   "default": "Blog" },
+    { "type": "url",  "id": "col3_link1_url",     "label": "Link 1 URL" },
+    { "type": "text", "id": "col3_link2_label",   "label": "Link 2 label",   "default": "Reports" },
+    { "type": "url",  "id": "col3_link2_url",     "label": "Link 2 URL" },
+    { "type": "text", "id": "col3_link3_label",   "label": "Link 3 label" },
+    { "type": "url",  "id": "col3_link3_url",     "label": "Link 3 URL" },
+    { "type": "text", "id": "col3_link4_label",   "label": "Link 4 label" },
+    { "type": "url",  "id": "col3_link4_url",     "label": "Link 4 URL" },
+    { "type": "text", "id": "col3_link5_label",   "label": "Link 5 label" },
+    { "type": "url",  "id": "col3_link5_url",     "label": "Link 5 URL" },
+    { "type": "text", "id": "col3_link6_label",   "label": "Link 6 label" },
+    { "type": "url",  "id": "col3_link6_url",     "label": "Link 6 URL" },
+
+    {
+      "type": "header",
+      "content": "Column 4"
+    },
+    { "type": "text", "id": "col4_title",         "label": "Column heading", "default": "Developers" },
+    { "type": "text", "id": "col4_link1_label",   "label": "Link 1 label",   "default": "Documentation" },
+    { "type": "url",  "id": "col4_link1_url",     "label": "Link 1 URL" },
+    { "type": "text", "id": "col4_link2_label",   "label": "Link 2 label",   "default": "Changelog" },
+    { "type": "url",  "id": "col4_link2_url",     "label": "Link 2 URL" },
+    { "type": "text", "id": "col4_link3_label",   "label": "Link 3 label",   "default": "Status" },
+    { "type": "url",  "id": "col4_link3_url",     "label": "Link 3 URL" },
+    { "type": "text", "id": "col4_link4_label",   "label": "Link 4 label",   "default": "Developer Network" },
+    { "type": "url",  "id": "col4_link4_url",     "label": "Link 4 URL" },
+    { "type": "text", "id": "col4_link5_label",   "label": "Link 5 label" },
+    { "type": "url",  "id": "col4_link5_url",     "label": "Link 5 URL" },
+    { "type": "text", "id": "col4_link6_label",   "label": "Link 6 label" },
+    { "type": "url",  "id": "col4_link6_url",     "label": "Link 6 URL" },
+
+    {
+      "type": "header",
+      "content": "Column 5 (Company)"
+    },
+    { "type": "text", "id": "col5_title",         "label": "Column heading", "default": "Company" },
+    { "type": "text", "id": "col5_link1_label",   "label": "Link 1 label",   "default": "About" },
+    { "type": "url",  "id": "col5_link1_url",     "label": "Link 1 URL" },
+    { "type": "text", "id": "col5_link2_label",   "label": "Link 2 label",   "default": "Careers" },
+    { "type": "url",  "id": "col5_link2_url",     "label": "Link 2 URL" },
+    { "type": "text", "id": "col5_link3_label",   "label": "Link 3 label",   "default": "Partners" },
+    { "type": "url",  "id": "col5_link3_url",     "label": "Link 3 URL" },
+    { "type": "text", "id": "col5_link4_label",   "label": "Link 4 label" },
+    { "type": "url",  "id": "col5_link4_url",     "label": "Link 4 URL" },
+
+    {
+      "type": "header",
+      "content": "Legal Links"
+    },
+    { "type": "text", "id": "legal1_label", "label": "Legal link 1 label", "default": "Terms of Use" },
+    { "type": "url",  "id": "legal1_url",   "label": "Legal link 1 URL" },
+    { "type": "text", "id": "legal2_label", "label": "Legal link 2 label", "default": "Privacy Policy" },
+    { "type": "url",  "id": "legal2_url",   "label": "Legal link 2 URL" },
+    { "type": "text", "id": "legal3_label", "label": "Legal link 3 label", "default": "Security" },
+    { "type": "url",  "id": "legal3_url",   "label": "Legal link 3 URL" }
+  ],
+  "presets": [
+    {
+      "name": "Retool Footer",
+      "category": "Footer"
     }
   ]
 }
