@@ -1,0 +1,534 @@
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;1,400;1,500&family=DM+Sans:wght@300;400;500&display=swap" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;1,400;1,500&family=DM+Sans:wght@300;400;500&display=swap"></noscript>
+
+{%- liquid
+  assign hero_eyebrow   = section.settings.hero_eyebrow   | default: 'Our Story'
+  assign hero_heading   = section.settings.hero_heading   | default: 'Crafted with intention.'
+  assign hero_heading2  = section.settings.hero_heading2  | default: 'Built to endure.'
+  assign hero_sub       = section.settings.hero_sub       | default: 'We believe great design is never accidental. Every stitch, every silhouette, every choice is made with care — for you.'
+  assign hero_cta_label = section.settings.hero_cta_label | default: 'Explore the Collection'
+  assign hero_cta_url   = section.settings.hero_cta_url   | default: routes.all_products_collection_url
+  assign hero_caption   = section.settings.hero_caption   | default: 'Where tradition meets tomorrow.'
+  assign founded_year   = section.settings.founded_year   | default: '2010'
+
+  assign story_label    = section.settings.story_label    | default: 'The Beginning'
+  assign story_heading  = section.settings.story_heading  | default: 'Born from a love of craft and heritage.'
+  assign story_body1    = section.settings.story_body1    | default: 'We started in a small studio with a single sewing machine and an unwavering belief that clothing should feel like a second skin. Years later, that belief still drives every decision we make.'
+  assign story_body2    = section.settings.story_body2    | default: 'Our roots are in traditional Indian craftsmanship. Our vision is global. We bridge both worlds without compromising either.'
+  assign story_quote    = section.settings.story_quote    | default: 'We donot make clothing. We make memories you can wear.'
+  assign story_author   = section.settings.story_quote_author | default: 'Founder'
+
+  assign values_heading = section.settings.values_heading | default: 'What we stand for'
+
+  assign team_eyebrow   = section.settings.team_eyebrow   | default: 'Our People'
+  assign team_heading   = section.settings.team_heading   | default: 'The people behind the craft'
+  assign team_sub       = section.settings.team_sub       | default: 'A small, dedicated team of designers, weavers, and dreamers.'
+
+  assign cta_heading    = section.settings.cta_heading    | default: 'Wear the story.'
+  assign cta_sub        = section.settings.cta_sub        | default: 'Every piece in our collection carries a piece of us.'
+  assign cta_label      = section.settings.cta_label      | default: 'Shop Now'
+  assign cta_url        = section.settings.cta_url        | default: routes.all_products_collection_url
+-%}
+
+<div class="bg-[#faf8f4] overflow-hidden w-full">
+
+  <div class="relative">
+
+    <div class="hidden lg:block absolute top-0 right-0 w-1/2 h-full bg-[#f2ede4]"></div>
+
+    <div class="relative z-10 max-w-[1400px] mx-auto px-5 sm:px-8 lg:px-14
+                pt-20 sm:pt-28 lg:pt-36 pb-24 sm:pb-32
+                grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-0 items-center">
+
+      <div class="lg:pr-16">
+
+        <div class="flex items-center gap-3 mb-6">
+          <span class="w-[6px] h-[6px] bg-[#c9a96e] rotate-45 shrink-0"></span>
+          <span class="text-[10px] font-medium tracking-[0.3em] uppercase text-[#c9a96e]"
+                style="font-family:'DM Sans',sans-serif;">
+            {{ hero_eyebrow }}
+          </span>
+          <span class="h-px w-12 bg-gradient-to-r from-[#c9a96e] to-transparent opacity-50 shrink-0"></span>
+        </div>
+
+        <h1 class="leading-[1.1] tracking-tight text-[#1c1a16]"
+            style="font-family:'Playfair Display',serif;font-size:clamp(2.2rem,5vw,3.8rem);font-weight:500;">
+          {{ hero_heading }}<br>
+          <em class="text-[#c9a96e] font-normal italic">{{ hero_heading2 }}</em>
+        </h1>
+
+        <p class="mt-6 max-w-md text-[15px] font-light text-[#7a7060] leading-[1.75]"
+           style="font-family:'DM Sans',sans-serif;">
+          {{ hero_sub }}
+        </p>
+
+        {%- if hero_cta_label != blank -%}
+          <a href="{{ hero_cta_url }}"
+             class="mt-10 inline-flex items-center gap-3
+                    text-[11px] font-medium tracking-[0.22em] uppercase text-[#1c1a16]
+                    border-b border-[#1c1a16] pb-0.5
+                    hover:text-[#c9a96e] hover:border-[#c9a96e]
+                    transition-colors duration-300"
+             style="font-family:'DM Sans',sans-serif;">
+            <span>{{ hero_cta_label }}</span>
+            <svg class="transition-transform duration-300 group-hover:translate-x-1"
+                 width="16" height="12" viewBox="0 0 18 14" fill="none" aria-hidden="true">
+              <path d="M1 7H17M10.5 1L17 7L10.5 13" stroke="currentColor" stroke-width="1.2"
+                    stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        {%- endif -%}
+      </div>
+
+      <div class="relative mt-8 lg:mt-0">
+        <div class="relative overflow-hidden aspect-[4/5] bg-[#ede7de]">
+          {%- if section.settings.hero_image != blank -%}
+            <img
+              src="{{ section.settings.hero_image | image_url: width: 900 }}"
+              srcset="{{ section.settings.hero_image | image_url: width: 500 }} 500w,
+                      {{ section.settings.hero_image | image_url: width: 900 }} 900w"
+              sizes="(max-width:1024px) 100vw, 50vw"
+              alt="{{ section.settings.hero_image.alt | escape | default: hero_eyebrow }}"
+              width="900" height="1125"
+              loading="eager" fetchpriority="high" decoding="async"
+              class="w-full h-full object-cover object-center"
+            >
+          {%- else -%}
+            <div class="w-full h-full flex items-center justify-center bg-[#ede7de]">
+              <svg class="w-16 h-16 text-[#c9a96e] opacity-30" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="0.8"
+                      d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+              </svg>
+            </div>
+          {%- endif -%}
+          <div class="absolute top-4 left-4 w-10 h-10 border-t border-l border-[#c9a96e] opacity-60 pointer-events-none"></div>
+          <div class="absolute bottom-4 right-4 w-10 h-10 border-b border-r border-[#c9a96e] opacity-60 pointer-events-none"></div>
+        </div>
+
+        {%- if hero_caption != blank -%}
+          <div class="absolute -bottom-5 -left-4 sm:-left-8 bg-white px-5 py-4 shadow-xl max-w-[200px]">
+            <p class="text-[13px] italic text-[#1c1a16] leading-snug"
+               style="font-family:'Playfair Display',serif;">
+              "{{ hero_caption }}"
+            </p>
+          </div>
+        {%- endif -%}
+
+        {%- if founded_year != blank -%}
+          <div class="absolute -top-5 -right-3 sm:-right-5 bg-[#1c1a16] px-4 py-3">
+            <p class="text-[8px] font-medium tracking-[0.25em] uppercase text-[#c9a96e] leading-none mb-1.5"
+               style="font-family:'DM Sans',sans-serif;">
+              Since
+            </p>
+            <p class="text-2xl font-light text-white leading-none"
+               style="font-family:'Playfair Display',serif;">
+              {{ founded_year }}
+            </p>
+          </div>
+        {%- endif -%}
+      </div>
+
+    </div>
+  </div>
+
+  <div class="bg-white py-20 sm:py-28">
+    <div class="max-w-[1400px] mx-auto px-5 sm:px-8 lg:px-14">
+      <div class="grid grid-cols-1 lg:grid-cols-[1fr_1.2fr] gap-12 lg:gap-20 items-start">
+        <div class="relative pb-10 lg:pb-0">
+          <div class="overflow-hidden aspect-[3/4] bg-[#ede7de]">
+            {%- if section.settings.story_image != blank -%}
+              <img
+                src="{{ section.settings.story_image | image_url: width: 700 }}"
+                alt="{{ section.settings.story_image.alt | escape | default: story_label }}"
+                width="700" height="933"
+                loading="lazy" decoding="async"
+                class="w-full h-full object-cover object-center"
+              >
+            {%- else -%}
+              <div class="w-full h-full bg-gradient-to-br from-[#e0d4c4] to-[#ccc0b0] flex items-center justify-center">
+                <svg class="w-12 h-12 text-[#c9a96e] opacity-30" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="0.8"
+                        d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                </svg>
+              </div>
+            {%- endif -%}
+          </div>
+
+          <div class="absolute -bottom-4 -right-2 sm:-right-6 w-[38%] aspect-square
+                      bg-[#f2ede4] border-4 border-white shadow-lg
+                      flex items-center justify-center">
+            {%- if section.settings.story_image2 != blank -%}
+              <img
+                src="{{ section.settings.story_image2 | image_url: width: 300 }}"
+                alt="{{ section.settings.story_image2.alt | escape }}"
+                width="300" height="300"
+                loading="lazy" decoding="async"
+                class="w-full h-full object-cover"
+              >
+            {%- else -%}
+              <span class="text-5xl font-light text-[#c9a96e] opacity-25"
+                    style="font-family:'Playfair Display',serif;">
+                {{ founded_year }}
+              </span>
+            {%- endif -%}
+          </div>
+        </div>
+
+        <div class="lg:pt-10">
+          <p class="text-[10px] font-medium tracking-[0.3em] uppercase text-[#c9a96e] mb-4"
+             style="font-family:'DM Sans',sans-serif;">
+            {{ story_label }}
+          </p>
+          <div class="h-px w-full bg-gradient-to-r from-[#c9a96e] to-transparent opacity-20 mb-8"></div>
+
+          <h2 class="leading-[1.15] tracking-[-0.01em] text-[#1c1a16] mb-8"
+              style="font-family:'Playfair Display',serif;font-size:clamp(1.6rem,3.5vw,2.6rem);font-weight:500;font-style:italic;">
+            {{ story_heading }}
+          </h2>
+
+          <div class="space-y-5">
+            <p class="text-[14px] font-light text-[#7a7060] leading-[1.8]"
+               style="font-family:'DM Sans',sans-serif;">{{ story_body1 }}</p>
+            {%- if story_body2 != blank -%}
+              <p class="text-[14px] font-light text-[#7a7060] leading-[1.8]"
+                 style="font-family:'DM Sans',sans-serif;">{{ story_body2 }}</p>
+            {%- endif -%}
+          </div>
+
+          {%- if story_quote != blank -%}
+            <blockquote class="mt-10 pl-5 border-l-2 border-[#c9a96e]">
+              <p class="text-[17px] font-normal italic text-[#1c1a16] leading-[1.65]"
+                 style="font-family:'Playfair Display',serif;">
+                "{{ story_quote }}"
+              </p>
+              {%- if story_author != blank -%}
+                <footer class="mt-3">
+                  <cite class="not-italic text-[10px] font-medium tracking-[0.15em] uppercase text-[#c9a96e]"
+                        style="font-family:'DM Sans',sans-serif;">
+                    — {{ story_author }}
+                  </cite>
+                </footer>
+              {%- endif -%}
+            </blockquote>
+          {%- endif -%}
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  {%- if section.settings.show_stats -%}
+    <div class="bg-[#1c1a16] py-14 sm:py-16">
+      <div class="max-w-[1400px] mx-auto px-5 sm:px-8 lg:px-14">
+        <div class="grid grid-cols-2 lg:grid-cols-4 divide-x divide-y lg:divide-y-0 divide-[#c9a96e]/10">
+          {%- for i in (1..4) -%}
+            {%- assign v_key = 'stat' | append: i | append: '_value' -%}
+            {%- assign l_key = 'stat' | append: i | append: '_label' -%}
+            {%- if section.settings[v_key] != blank -%}
+              <div class="px-8 py-10 sm:py-12 text-center">
+                <p class="font-normal italic text-[#c9a96e] leading-none tracking-tight"
+                   style="font-family:'Playfair Display',serif;font-size:clamp(2.2rem,4.5vw,3.5rem);">
+                  {{ section.settings[v_key] }}
+                </p>
+                <p class="mt-2 text-[9px] font-light tracking-[0.22em] uppercase text-[#c9a96e]/50"
+                   style="font-family:'DM Sans',sans-serif;">
+                  {{ section.settings[l_key] }}
+                </p>
+              </div>
+            {%- endif -%}
+          {%- endfor -%}
+        </div>
+      </div>
+    </div>
+  {%- endif -%}
+
+  <div class="bg-[#faf8f4] py-20 sm:py-28">
+    <div class="max-w-[1400px] mx-auto px-5 sm:px-8 lg:px-14">
+
+      <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-14 sm:mb-16">
+        <h2 class="font-medium italic text-[#1c1a16] leading-[1.15] tracking-[-0.01em] max-w-sm"
+            style="font-family:'Playfair Display',serif;font-size:clamp(1.6rem,3.5vw,2.4rem);">
+          {{ values_heading }}
+        </h2>
+        <div class="hidden sm:block h-px w-20 bg-[#c9a96e] opacity-30 self-center"></div>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 lg:gap-6">
+        {%- for i in (1..6) -%}
+          {%- assign t_key = 'value' | append: i | append: '_title' -%}
+          {%- assign b_key = 'value' | append: i | append: '_body'  -%}
+          {%- assign ic_k  = 'value' | append: i | append: '_icon'  -%}
+          {%- assign vt = section.settings[t_key] -%}
+          {%- assign vb = section.settings[b_key] -%}
+          {%- assign vi = section.settings[ic_k]  -%}
+          {%- if vt != blank -%}
+            <div class="group bg-white border border-[#f0ebe3] p-6
+                        hover:-translate-y-1 hover:shadow-[0_8px_40px_rgba(28,26,22,0.08)]
+                        transition-all duration-300">
+
+              <div class="flex items-start justify-between mb-5">
+                <div class="w-10 h-10 flex items-center justify-center bg-[#c9a96e]/10 text-[#c9a96e]">
+                  {%- if vi == 'craft' -%}
+                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+                  {%- elsif vi == 'heart' -%}
+                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+                  {%- elsif vi == 'leaf' -%}
+                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M17 8C8 10 5.9 16.17 3.82 19.34c-.2.3-.34.5-.48.62L3 20M17 8C17 8 22 9 22 16c0 3-2 6-6 6-1 0-2-.5-3-1"/></svg>
+                  {%- elsif vi == 'star' -%}
+                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                  {%- elsif vi == 'shield' -%}
+                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                  {%- else -%}
+                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+                  {%- endif -%}
+                </div>
+                <span class="text-[10px] text-[#c9a96e]/30"
+                      style="font-family:'Playfair Display',serif;">0{{ i }}</span>
+              </div>
+
+              <h3 class="text-[17px] font-medium italic text-[#1c1a16] leading-[1.25] mb-2.5"
+                  style="font-family:'Playfair Display',serif;">
+                {{ vt }}
+              </h3>
+              {%- if vb != blank -%}
+                <p class="text-[13px] font-light text-[#7a7060] leading-[1.75]"
+                   style="font-family:'DM Sans',sans-serif;">
+                  {{ vb }}
+                </p>
+              {%- endif -%}
+
+              <div class="mt-5 h-px bg-[#e8e0d4] relative overflow-hidden">
+                <div class="absolute inset-y-0 left-0 w-0 group-hover:w-full bg-[#c9a96e] transition-all duration-500"></div>
+              </div>
+            </div>
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+    </div>
+  </div>
+
+  {%- assign show_team = false -%}
+  {%- for i in (1..4) -%}
+    {%- assign chk = 'team' | append: i | append: '_name' -%}
+    {%- if section.settings[chk] != blank -%}{%- assign show_team = true -%}{%- endif -%}
+  {%- endfor -%}
+
+  {%- if show_team -%}
+    <div class="bg-white py-20 sm:py-28">
+      <div class="max-w-[1400px] mx-auto px-5 sm:px-8 lg:px-14">
+
+        <div class="text-center mb-14">
+          <p class="text-[10px] font-medium tracking-[0.3em] uppercase text-[#c9a96e] mb-3"
+             style="font-family:'DM Sans',sans-serif;">
+            {{ team_eyebrow }}
+          </p>
+          <h2 class="font-medium italic text-[#1c1a16] leading-[1.15] mx-auto max-w-lg"
+              style="font-family:'Playfair Display',serif;font-size:clamp(1.6rem,3.5vw,2.4rem);">
+            {{ team_heading }}
+          </h2>
+          {%- if team_sub != blank -%}
+            <p class="text-[14px] font-light text-[#7a7060] mt-3 mx-auto max-w-md"
+               style="font-family:'DM Sans',sans-serif;">
+              {{ team_sub }}
+            </p>
+          {%- endif -%}
+        </div>
+
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-6 lg:gap-8">
+          {%- for i in (1..4) -%}
+            {%- assign nm = 'team' | append: i | append: '_name'  -%}
+            {%- assign rl = 'team' | append: i | append: '_role'  -%}
+            {%- assign im = 'team' | append: i | append: '_image' -%}
+            {%- assign qt = 'team' | append: i | append: '_quote' -%}
+            {%- if section.settings[nm] != blank -%}
+              <div class="group">
+                <div class="relative overflow-hidden aspect-[3/4] bg-[#f2ede4]">
+                  {%- if section.settings[im] != blank -%}
+                    <img
+                      src="{{ section.settings[im] | image_url: width: 400 }}"
+                      alt="{{ section.settings[nm] | escape }}"
+                      width="400" height="533"
+                      loading="lazy" decoding="async"
+                      class="w-full h-full object-cover object-top
+                             transition-transform duration-700 group-hover:scale-[1.04]"
+                    >
+                  {%- else -%}
+                    <div class="w-full h-full bg-gradient-to-br from-[#e8d8c8] to-[#d0c0a8] flex items-center justify-center">
+                      <svg class="w-10 h-10 text-[#c9a96e] opacity-40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1"
+                              d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                      </svg>
+                    </div>
+                  {%- endif -%}
+
+                  {%- if section.settings[qt] != blank -%}
+                    <div class="absolute inset-0 bg-[#1c1a16]/80 flex items-end p-4
+                                opacity-0 group-hover:opacity-100 transition-opacity duration-400">
+                      <p class="text-[12px] font-normal italic text-[#f0ead8] leading-relaxed"
+                         style="font-family:'Playfair Display',serif;">
+                        "{{ section.settings[qt] }}"
+                      </p>
+                    </div>
+                  {%- endif -%}
+                </div>
+
+                <h3 class="mt-4 text-[15px] font-medium text-[#1c1a16]"
+                    style="font-family:'Playfair Display',serif;">
+                  {{ section.settings[nm] }}
+                </h3>
+                {%- if section.settings[rl] != blank -%}
+                  <p class="mt-0.5 text-[9px] font-medium tracking-[0.22em] uppercase text-[#c9a96e]"
+                     style="font-family:'DM Sans',sans-serif;">
+                    {{ section.settings[rl] }}
+                  </p>
+                {%- endif -%}
+              </div>
+            {%- endif -%}
+          {%- endfor -%}
+        </div>
+
+      </div>
+    </div>
+  {%- endif -%}
+
+  <div class="relative bg-[#1c1a16] py-20 sm:py-28 overflow-hidden">
+
+    {%- if section.settings.cta_image != blank -%}
+      <div class="absolute inset-0">
+        <img
+          src="{{ section.settings.cta_image | image_url: width: 1400 }}"
+          alt="" role="presentation"
+          width="1400" height="600"
+          loading="lazy" decoding="async"
+          class="w-full h-full object-cover object-center opacity-20"
+        >
+      </div>
+    {%- endif -%}
+
+    <div class="relative z-10 max-w-[1400px] mx-auto px-5 sm:px-8 lg:px-14 text-center">
+
+      <div class="flex items-center justify-center gap-3 mb-6">
+        <div class="h-px w-12 bg-[#c9a96e]/35"></div>
+        <span class="w-[6px] h-[6px] bg-[#c9a96e]/50 rotate-45 inline-block"></span>
+        <div class="h-px w-12 bg-[#c9a96e]/35"></div>
+      </div>
+
+      <h2 class="font-normal italic text-[#f0ead8] leading-[1.1] tracking-[-0.02em] mb-4"
+          style="font-family:'Playfair Display',serif;font-size:clamp(2rem,5vw,4rem);">
+        {{ cta_heading }}
+      </h2>
+
+      <p class="text-[14px] font-light text-[#c9a96e]/60 leading-[1.75] mx-auto max-w-md mb-10"
+         style="font-family:'DM Sans',sans-serif;">
+        {{ cta_sub }}
+      </p>
+
+      <a href="{{ cta_url }}"
+         class="inline-flex items-center gap-3
+                text-[11px] font-medium tracking-[0.22em] uppercase text-[#c9a96e]
+                border border-[#c9a96e]/40 px-8 py-4
+                hover:bg-[#c9a96e] hover:text-[#1c1a16] hover:border-[#c9a96e]
+                transition-all duration-300"
+         style="font-family:'DM Sans',sans-serif;">
+        <span>{{ cta_label }}</span>
+        <svg width="14" height="10" viewBox="0 0 18 12" fill="none" aria-hidden="true">
+          <path d="M0.5 6H17M11.5 1L17 6L11.5 11" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </a>
+
+    </div>
+  </div>
+
+</div>
+
+{% schema %}
+{
+  "name": "About Section",
+  "tag": "section",
+  "settings": [
+    { "type": "header",      "content": "Hero" },
+    { "type": "text",        "id": "hero_eyebrow",   "label": "Eyebrow",            "default": "Our Story" },
+    { "type": "text",        "id": "hero_heading",   "label": "Heading line 1",     "default": "Crafted with intention." },
+    { "type": "text",        "id": "hero_heading2",  "label": "Heading line 2 (italic gold)", "default": "Built to endure." },
+    { "type": "textarea",    "id": "hero_sub",       "label": "Subtext",            "default": "We believe great design is never accidental. Every stitch, every silhouette, every choice is made with care — for you." },
+    { "type": "image_picker","id": "hero_image",     "label": "Hero image" },
+    { "type": "text",        "id": "hero_caption",   "label": "Floating caption",   "default": "Where tradition meets tomorrow." },
+    { "type": "text",        "id": "founded_year",   "label": "Founded year",       "default": "2010" },
+    { "type": "text",        "id": "hero_cta_label", "label": "CTA label",          "default": "Explore the Collection" },
+    { "type": "url",         "id": "hero_cta_url",   "label": "CTA URL" },
+
+    { "type": "header",      "content": "Our Story" },
+    { "type": "text",        "id": "story_label",    "label": "Eyebrow",            "default": "The Beginning" },
+    { "type": "text",        "id": "story_heading",  "label": "Heading",            "default": "Born from a love of craft and heritage." },
+    { "type": "textarea",    "id": "story_body1",    "label": "Paragraph 1",        "default": "We started in a small studio with a single sewing machine and an unwavering belief that clothing should feel like a second skin." },
+    { "type": "textarea",    "id": "story_body2",    "label": "Paragraph 2",        "default": "Our roots are in traditional Indian craftsmanship. Our vision is global." },
+    { "type": "image_picker","id": "story_image",    "label": "Main image" },
+    { "type": "image_picker","id": "story_image2",   "label": "Accent image (small, bottom-right)" },
+    { "type": "textarea",    "id": "story_quote",    "label": "Pull quote",         "default": "We donot make clothing. We make memories you can wear." },
+    { "type": "text",        "id": "story_quote_author","label": "Quote author",    "default": "Founder" },
+
+    { "type": "header",      "content": "Stats Strip" },
+    { "type": "checkbox",    "id": "show_stats",     "label": "Show stats",         "default": true },
+    { "type": "text",        "id": "stat1_value",    "label": "Stat 1 value",       "default": "15+" },
+    { "type": "text",        "id": "stat1_label",    "label": "Stat 1 label",       "default": "Years of Craft" },
+    { "type": "text",        "id": "stat2_value",    "label": "Stat 2 value",       "default": "200+" },
+    { "type": "text",        "id": "stat2_label",    "label": "Stat 2 label",       "default": "Artisan Weavers" },
+    { "type": "text",        "id": "stat3_value",    "label": "Stat 3 value",       "default": "50k+" },
+    { "type": "text",        "id": "stat3_label",    "label": "Stat 3 label",       "default": "Happy Customers" },
+    { "type": "text",        "id": "stat4_value",    "label": "Stat 4 value",       "default": "30+" },
+    { "type": "text",        "id": "stat4_label",    "label": "Stat 4 label",       "default": "Countries Reached" },
+
+    { "type": "header",      "content": "Values" },
+    { "type": "text",        "id": "values_heading", "label": "Section heading",    "default": "What we stand for" },
+    { "type": "select",      "id": "value1_icon",    "label": "Value 1 icon",       "options": [{"value":"craft","label":"Craft"},{"value":"heart","label":"Heart"},{"value":"leaf","label":"Leaf"},{"value":"star","label":"Star"},{"value":"shield","label":"Shield"},{"value":"circle","label":"Circle"}], "default": "craft" },
+    { "type": "text",        "id": "value1_title",   "label": "Value 1 title",      "default": "Heritage Craft" },
+    { "type": "textarea",    "id": "value1_body",    "label": "Value 1 description","default": "Every fabric is sourced from generational weavers who have spent lifetimes perfecting their art." },
+    { "type": "select",      "id": "value2_icon",    "label": "Value 2 icon",       "options": [{"value":"craft","label":"Craft"},{"value":"heart","label":"Heart"},{"value":"leaf","label":"Leaf"},{"value":"star","label":"Star"},{"value":"shield","label":"Shield"},{"value":"circle","label":"Circle"}], "default": "heart" },
+    { "type": "text",        "id": "value2_title",   "label": "Value 2 title",      "default": "Made with Love" },
+    { "type": "textarea",    "id": "value2_body",    "label": "Value 2 description","default": "Personal care at every stage — design, weaving, tailoring, and delivery." },
+    { "type": "select",      "id": "value3_icon",    "label": "Value 3 icon",       "options": [{"value":"craft","label":"Craft"},{"value":"heart","label":"Heart"},{"value":"leaf","label":"Leaf"},{"value":"star","label":"Star"},{"value":"shield","label":"Shield"},{"value":"circle","label":"Circle"}], "default": "leaf" },
+    { "type": "text",        "id": "value3_title",   "label": "Value 3 title",      "default": "Sustainable Roots" },
+    { "type": "textarea",    "id": "value3_body",    "label": "Value 3 description","default": "Natural fibres and ethical supply chains — the earth is part of every garment we make." },
+    { "type": "select",      "id": "value4_icon",    "label": "Value 4 icon",       "options": [{"value":"craft","label":"Craft"},{"value":"heart","label":"Heart"},{"value":"leaf","label":"Leaf"},{"value":"star","label":"Star"},{"value":"shield","label":"Shield"},{"value":"circle","label":"Circle"}], "default": "star" },
+    { "type": "text",        "id": "value4_title",   "label": "Value 4 title",      "default": "Uncompromising Quality" },
+    { "type": "textarea",    "id": "value4_body",    "label": "Value 4 description","default": "24 quality checks before your garment reaches your hands. No exceptions." },
+    { "type": "select",      "id": "value5_icon",    "label": "Value 5 icon",       "options": [{"value":"craft","label":"Craft"},{"value":"heart","label":"Heart"},{"value":"leaf","label":"Leaf"},{"value":"star","label":"Star"},{"value":"shield","label":"Shield"},{"value":"circle","label":"Circle"}], "default": "shield" },
+    { "type": "text",        "id": "value5_title",   "label": "Value 5 title",      "default": "Customer Promise" },
+    { "type": "textarea",    "id": "value5_body",    "label": "Value 5 description","default": "If you're not completely in love with your purchase, we'll make it right." },
+    { "type": "select",      "id": "value6_icon",    "label": "Value 6 icon",       "options": [{"value":"craft","label":"Craft"},{"value":"heart","label":"Heart"},{"value":"leaf","label":"Leaf"},{"value":"star","label":"Star"},{"value":"shield","label":"Shield"},{"value":"circle","label":"Circle"}], "default": "circle" },
+    { "type": "text",        "id": "value6_title",   "label": "Value 6 title" },
+    { "type": "textarea",    "id": "value6_body",    "label": "Value 6 description" },
+
+    { "type": "header",      "content": "Team" },
+    { "type": "text",        "id": "team_eyebrow",   "label": "Eyebrow",            "default": "Our People" },
+    { "type": "text",        "id": "team_heading",   "label": "Heading",            "default": "The people behind the craft" },
+    { "type": "text",        "id": "team_sub",       "label": "Subtext",            "default": "A small, dedicated team of designers, weavers, and dreamers." },
+    { "type": "image_picker","id": "team1_image",    "label": "Member 1 photo" },
+    { "type": "text",        "id": "team1_name",     "label": "Member 1 name" },
+    { "type": "text",        "id": "team1_role",     "label": "Member 1 role" },
+    { "type": "text",        "id": "team1_quote",    "label": "Member 1 hover quote" },
+    { "type": "image_picker","id": "team2_image",    "label": "Member 2 photo" },
+    { "type": "text",        "id": "team2_name",     "label": "Member 2 name" },
+    { "type": "text",        "id": "team2_role",     "label": "Member 2 role" },
+    { "type": "text",        "id": "team2_quote",    "label": "Member 2 hover quote" },
+    { "type": "image_picker","id": "team3_image",    "label": "Member 3 photo" },
+    { "type": "text",        "id": "team3_name",     "label": "Member 3 name" },
+    { "type": "text",        "id": "team3_role",     "label": "Member 3 role" },
+    { "type": "text",        "id": "team3_quote",    "label": "Member 3 hover quote" },
+    { "type": "image_picker","id": "team4_image",    "label": "Member 4 photo" },
+    { "type": "text",        "id": "team4_name",     "label": "Member 4 name" },
+    { "type": "text",        "id": "team4_role",     "label": "Member 4 role" },
+    { "type": "text",        "id": "team4_quote",    "label": "Member 4 hover quote" },
+
+    { "type": "header",      "content": "Closing CTA" },
+    { "type": "image_picker","id": "cta_image",      "label": "Background image" },
+    { "type": "text",        "id": "cta_heading",    "label": "Heading",            "default": "Wear the story." },
+    { "type": "text",        "id": "cta_sub",        "label": "Subtext",            "default": "Every piece in our collection carries a piece of us." },
+    { "type": "text",        "id": "cta_label",      "label": "Button label",       "default": "Shop Now" },
+    { "type": "url",         "id": "cta_url",        "label": "Button URL" }
+  ],
+  "presets": [{ "name": "About Section", "category": "Pages" }]
+}
+{% endschema %}

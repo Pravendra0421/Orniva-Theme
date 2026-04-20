@@ -1,70 +1,491 @@
-{% comment %}
-  This section is used in the search template to render search results for
-  products, articles, and pages.
-
-  https://shopify.dev/docs/storefronts/themes/architecture/templates/search
-{% endcomment %}
-
-<h1>{{ 'search.title' | t }}</h1>
-
-<form action="{{ routes.search_url }}" method="get" role="search">
-  <input
-    type="search"
-    size="50"
-    name="q"
-    value="{{ search.terms | escape }}"
-    placeholder="{{ 'search.placeholder' | t }}"
-  >
-  <button type="submit">{{ 'search.submit' | t }}</button>
-</form>
-
-{% if search.performed %}
-  {% if search.results_count == 0 %}
-    <p>{{ 'search.no_results_html' | t: terms: search.terms }}</p>
-  {% else %}
-    <p>{{ 'search.results_for_html' | t: terms: search.terms, count: search.results_count }}</p>
-
-    <div class="search-results">
-      {% paginate search.results by 20 %}
-        {% # Search result items may be an article, a page, or a product. %}
-        {% for result in search.results %}
-          <div class="search-result">
-            {% assign featured_image = result.featured_image | default: result.image %}
-            {% if featured_image %}
-              {% render 'image', class: 'search-result__image', image: featured_image, url: result.url, width: 400 %}
-            {% endif %}
-            <div class="search-result__content">
-              <p>
-                {{ result.title | link_to: result.url }}
-                {% if result.price %}
-                  {{ result.price | money_with_currency }}
-                {% endif %}
-              </p>
-            </div>
-          </div>
-        {% endfor %}
-
-        {{ paginate | default_pagination }}
-      {% endpaginate %}
+<div class="bg-[#faf8f4] min-h-screen">
+  <div class="max-w-[1400px] mx-auto px-5 sm:px-8 lg:px-14 py-14 sm:py-20">
+    <div class="mb-10 sm:mb-14">
+      <div class="flex items-center gap-3 mb-4">
+        <span class="w-[5px] h-[5px] bg-[#c9a96e] rotate-45 shrink-0"></span>
+        <span class="text-[10px] font-medium tracking-[0.3em] uppercase text-[#c9a96e]">
+          Discover
+        </span>
+      </div>
+      <h1 class="text-[2rem] sm:text-[2.8rem] lg:text-[3.2rem] font-medium italic
+                 text-[#1c1a16] leading-none tracking-tight"
+          style="font-family:'Playfair Display',Georgia,serif;">
+        Search
+      </h1>
     </div>
-  {% endif %}
-{% endif %}
+    <form
+      action="{{ routes.search_url }}"
+      method="get"
+      role="search"
+      class="mb-12 sm:mb-16"
+    >
+      <input type="hidden" name="type" value="{{ section.settings.search_type | default: 'product,article,page' }}">
 
-{% stylesheet %}
-  .search-results {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  }
-  .search-results .prev,
-  .search-results .page,
-  .search-results .next {
-    grid-column: 1 / -1;
-  }
-{% endstylesheet %}
+      <div class="flex items-stretch max-w-2xl border border-[#1c1a16]
+                  focus-within:border-[#c9a96e] transition-colors duration-300">
+        <div class="flex items-center pl-4 text-[#9a9080] shrink-0" aria-hidden="true">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="1.5"
+               stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"/>
+            <path d="M21 21l-4.35-4.35"/>
+          </svg>
+        </div>
+        <label for="search-input" class="sr-only">Search</label>
+        <input
+          id="search-input"
+          type="search"
+          name="q"
+          value="{{ search.terms | escape }}"
+          placeholder="{{ section.settings.placeholder | default: 'Search products, articles...' }}"
+          autocomplete="off"
+          class="flex-1 bg-transparent px-4 py-4 text-[14px] font-light text-[#1c1a16]
+                 placeholder-[#9a9080] outline-none min-w-0"
+        >
+
+        <button
+          type="submit"
+          class="shrink-0 bg-[#1c1a16] text-white
+                 text-[10px] font-medium tracking-[0.22em] uppercase
+                 px-6 py-4
+                 hover:bg-[#c9a96e] transition-colors duration-300
+                 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#c9a96e]"
+        >
+          Search
+        </button>
+      </div>
+      {%- if section.settings.show_type_filters -%}
+        <div class="flex items-center gap-2 mt-4 flex-wrap">
+          {%- assign types = 'All,Products,Articles,Pages' | split: ',' -%}
+          {%- assign type_vals = ',product,article,page' | split: ',' -%}
+          {%- for tab in types -%}
+            {%- assign tv = type_vals[forloop.index0] -%}
+            <a
+              href="{{ routes.search_url }}?q={{ search.terms | escape }}&type={{ tv }}"
+              class="text-[10px] font-medium tracking-[0.18em] uppercase px-4 py-2
+                     border transition-colors duration-200
+                     {% if search.filters contains tv or tv == '' and search.filters == blank %}
+                       border-[#1c1a16] bg-[#1c1a16] text-white
+                     {% else %}
+                       border-[#d4cfc8] text-[#7a7060] hover:border-[#1c1a16] hover:text-[#1c1a16]
+                     {% endif %}"
+            >
+              {{ tab }}
+            </a>
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+
+    </form>
+
+    {%- if search.performed -%}
+
+      {%- if search.results_count == 0 -%}
+        <div class="py-20 text-center">
+          <div class="w-16 h-16 mx-auto mb-6 flex items-center justify-center
+                      border border-[#e8e0d4] text-[#c9a96e]">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="1.2"
+                 stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="8"/>
+              <path d="M21 21l-4.35-4.35"/>
+            </svg>
+          </div>
+          <h2 class="text-[1.4rem] font-medium italic text-[#1c1a16] mb-3"
+              style="font-family:'Playfair Display',Georgia,serif;">
+            No results found
+          </h2>
+          <p class="text-[14px] font-light text-[#7a7060] mb-2">
+            We couldn't find anything for
+            <span class="font-medium text-[#1c1a16]">"{{ search.terms }}"</span>
+          </p>
+          <p class="text-[13px] font-light text-[#9a9080]">
+            Try a different keyword or browse our collections.
+          </p>
+          <a
+            href="{{ routes.all_products_collection_url }}"
+            class="mt-8 inline-flex items-center gap-2
+                   text-[10px] font-medium tracking-[0.22em] uppercase
+                   text-[#c9a96e] border-b border-[#c9a96e]/50 pb-0.5
+                   hover:border-[#c9a96e] transition-colors duration-200"
+          >
+            Browse All Products
+            <svg width="12" height="9" viewBox="0 0 16 12" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M1 6h14M9 1l6 5-6 6"/>
+            </svg>
+          </a>
+        </div>
+
+      {%- else -%}
+        <div class="flex items-center justify-between flex-wrap gap-3 mb-8
+                    pb-5 border-b border-[#e8e0d4]">
+          <p class="text-[13px] font-light text-[#7a7060]">
+            <span class="font-medium text-[#1c1a16]">{{ search.results_count }}</span>
+            result{%- if search.results_count != 1 -%}s{%- endif -%} for
+            <span class="font-medium italic text-[#1c1a16]">"{{ search.terms }}"</span>
+          </p>
+        </div>
+
+        {% paginate search.results by section.settings.results_per_page %}
+          <div class="grid grid-cols-2 sm:grid-cols-3
+                      {% if section.settings.grid_columns == '4' %}lg:grid-cols-4{% else %}lg:grid-cols-3{% endif %}
+                      gap-4 sm:gap-5 lg:gap-6">
+
+            {%- for result in search.results -%}
+
+              {%- liquid
+                assign is_product = false
+                assign is_article = false
+                if result.object_type == 'product'
+                  assign is_product = true
+                elsif result.object_type == 'article'
+                  assign is_article = true
+                endif
+                assign featured_image = result.featured_image | default: result.image
+                assign on_sale = false
+                if result.compare_at_price > result.price
+                  assign on_sale = true
+                endif
+              -%}
+
+              <article class="group bg-white" aria-label="{{ result.title | escape }}">
+                <a
+                  href="{{ result.url }}"
+                  class="block outline-none
+                         focus-visible:ring-2 focus-visible:ring-[#c9a96e] focus-visible:ring-offset-1"
+                >
+
+                  {%- comment -%} Image {%- endcomment -%}
+                  <div class="relative overflow-hidden
+                              {% if is_article %}aspect-[16/9]{% else %}aspect-[3/4]{% endif %}
+                              bg-[#f2ede4]">
+
+                    {%- if featured_image -%}
+                      <img
+                        src="{{ featured_image | image_url: width: 500 }}"
+                        srcset="{{ featured_image | image_url: width: 300 }} 300w,
+                                {{ featured_image | image_url: width: 500 }} 500w,
+                                {{ featured_image | image_url: width: 700 }} 700w"
+                        sizes="(max-width:640px) 50vw, (max-width:1024px) 33vw, 25vw"
+                        alt="{{ featured_image.alt | escape | default: result.title | escape }}"
+                        width="500"
+                        height="{% if is_article %}281{% else %}667{% endif %}"
+                        loading="{% if forloop.index <= 4 %}eager{% else %}lazy{% endif %}"
+                        decoding="async"
+                        class="w-full h-full object-cover object-center
+                               transition-transform duration-700 group-hover:scale-[1.05]"
+                      >
+                    {%- else -%}
+                      <div class="w-full h-full flex items-center justify-center bg-[#ede7de]">
+                        {%- if is_article -%}
+                          <svg class="w-10 h-10 text-[#c9a96e] opacity-30" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1"
+                                  d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                          </svg>
+                        {%- else -%}
+                          <svg class="w-10 h-10 text-[#c9a96e] opacity-30" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1"
+                                  d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                          </svg>
+                        {%- endif -%}
+                      </div>
+                    {%- endif -%}
+                    <div class="absolute top-3 left-3 pointer-events-none">
+                      {%- if is_article -%}
+                        <span class="text-[8px] font-medium tracking-[0.15em] uppercase
+                                     bg-[#1c1a16]/75 text-white backdrop-blur-sm
+                                     px-2 py-1 leading-none">
+                          Article
+                        </span>
+                      {%- elsif result.object_type == 'page' -%}
+                        <span class="text-[8px] font-medium tracking-[0.15em] uppercase
+                                     bg-[#1c1a16]/75 text-white backdrop-blur-sm
+                                     px-2 py-1 leading-none">
+                          Page
+                        </span>
+                      {%- elsif on_sale -%}
+                        {%- assign saving = result.compare_at_price | minus: result.price | times: 100 | divided_by: result.compare_at_price -%}
+                        <span class="text-[8px] font-medium tracking-[0.15em] uppercase
+                                     bg-[#c9a96e]/20 text-[#c9a96e] border border-[#c9a96e]/30
+                                     backdrop-blur-sm px-2 py-1 leading-none">
+                          −{{ saving }}%
+                        </span>
+                      {%- endif -%}
+                    </div>
+                    <div class="absolute inset-0 bg-black/10 opacity-0
+                                group-hover:opacity-100 transition-opacity duration-400
+                                pointer-events-none"></div>
+
+                  </div>
+                  <div class="p-4">
+
+                    {%- if result.vendor != blank and is_product -%}
+                      <p class="text-[9px] font-medium tracking-[0.22em] uppercase text-[#c9a96e] mb-1">
+                        {{ result.vendor }}
+                      </p>
+                    {%- endif -%}
+
+                    {%- if is_article and result.published_at -%}
+                      <p class="text-[9px] font-light tracking-[0.1em] text-[#9a9080] mb-1">
+                        {{ result.published_at | date: '%b %d, %Y' }}
+                      </p>
+                    {%- endif -%}
+
+                    <h2 class="text-[13px] sm:text-[14px] font-medium text-[#1c1a16]
+                               leading-snug line-clamp-2
+                               group-hover:text-[#c9a96e] transition-colors duration-200">
+                      {{ result.title }}
+                    </h2>
+
+                    {%- if is_article and result.excerpt != blank -%}
+                      <p class="mt-1.5 text-[12px] font-light text-[#7a7060] leading-[1.6] line-clamp-2">
+                        {{ result.excerpt | strip_html }}
+                      </p>
+                    {%- endif -%}
+
+                    {%- if is_product -%}
+                      <div class="flex items-baseline gap-2 mt-2 flex-wrap">
+                        <span class="text-[13px] font-medium text-[#1c1a16]">
+                          {{ result.price | money }}
+                        </span>
+                        {%- if on_sale -%}
+                          <span class="text-[11px] font-light text-[#9a9080] line-through">
+                            {{ result.compare_at_price | money }}
+                          </span>
+                        {%- endif -%}
+                      </div>
+                    {%- endif -%}
+
+                  </div>
+                </a>
+              </article>
+
+            {%- endfor -%}
+
+          </div>
+          {%- if paginate.pages > 1 -%}
+            <nav aria-label="Pagination"
+                 class="flex items-center justify-center gap-2 mt-14 sm:mt-16 flex-wrap">
+
+              {%- if paginate.previous -%}
+                <a href="{{ paginate.previous.url }}"
+                   class="flex items-center gap-2
+                          text-[10px] font-medium tracking-[0.2em] uppercase
+                          text-[#7a7060] border border-[#d4cfc8] px-5 py-3
+                          hover:text-[#c9a96e] hover:border-[#c9a96e]
+                          transition-all duration-200">
+                  <svg width="10" height="8" viewBox="0 0 14 12" fill="none"
+                       stroke="currentColor" stroke-width="1.3"
+                       stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M13 6H1M6 1L1 6l5 5"/>
+                  </svg>
+                  Prev
+                </a>
+              {%- endif -%}
+
+              {%- for part in paginate.parts -%}
+                {%- if part.is_link -%}
+                  <a href="{{ part.url }}"
+                     class="w-10 h-10 flex items-center justify-center
+                            text-[12px] font-medium text-[#7a7060]
+                            border border-[#d4cfc8]
+                            hover:text-[#c9a96e] hover:border-[#c9a96e]
+                            transition-all duration-200">
+                    {{ part.title }}
+                  </a>
+                {%- elsif part.title == paginate.current_page -%}
+                  <span class="w-10 h-10 flex items-center justify-center
+                               text-[12px] font-medium text-[#c9a96e]
+                               border border-[#c9a96e] bg-[#c9a96e]/8"
+                        aria-current="page">
+                    {{ part.title }}
+                  </span>
+                {%- else -%}
+                  <span class="w-10 h-10 flex items-center justify-center
+                               text-[12px] font-light text-[#c4bdb4]">
+                    {{ part.title }}
+                  </span>
+                {%- endif -%}
+              {%- endfor -%}
+
+              {%- if paginate.next -%}
+                <a href="{{ paginate.next.url }}"
+                   class="flex items-center gap-2
+                          text-[10px] font-medium tracking-[0.2em] uppercase
+                          text-[#7a7060] border border-[#d4cfc8] px-5 py-3
+                          hover:text-[#c9a96e] hover:border-[#c9a96e]
+                          transition-all duration-200">
+                  Next
+                  <svg width="10" height="8" viewBox="0 0 14 12" fill="none"
+                       stroke="currentColor" stroke-width="1.3"
+                       stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M1 6h12M8 1l5 5-5 5"/>
+                  </svg>
+                </a>
+              {%- endif -%}
+
+            </nav>
+          {%- endif -%}
+
+        {% endpaginate %}
+
+      {%- endif -%}
+
+    {%- else -%}
+      {%- if section.settings.show_suggestions and section.settings.suggestion_1 != blank -%}
+        <div class="mt-4">
+          <p class="text-[11px] font-light tracking-[0.15em] uppercase text-[#9a9080] mb-4">
+            Popular searches
+          </p>
+          <div class="flex items-center gap-2 flex-wrap">
+            {%- for i in (1..6) -%}
+              {%- assign sk = 'suggestion_' | append: i -%}
+              {%- if section.settings[sk] != blank -%}
+                <a
+                  href="{{ routes.search_url }}?q={{ section.settings[sk] | url_encode }}&type=product"
+                  class="text-[11px] font-light text-[#7a7060]
+                         border border-[#d4cfc8] px-4 py-2
+                         hover:border-[#c9a96e] hover:text-[#c9a96e]
+                         transition-all duration-200"
+                >
+                  {{ section.settings[sk] }}
+                </a>
+              {%- endif -%}
+            {%- endfor -%}
+          </div>
+        </div>
+      {%- endif -%}
+      {%- if section.settings.show_featured_collections -%}
+        <div class="mt-16 sm:mt-20">
+          <div class="flex items-center gap-3 mb-8">
+            <span class="w-[5px] h-[5px] bg-[#c9a96e] rotate-45 shrink-0"></span>
+            <p class="text-[10px] font-medium tracking-[0.3em] uppercase text-[#c9a96e]">
+              {{ section.settings.featured_heading | default: 'Browse Collections' }}
+            </p>
+          </div>
+          <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+            {%- for collection in collections limit: 4 -%}
+              <a
+                href="{{ collection.url }}"
+                class="group relative overflow-hidden aspect-[3/4] bg-[#f2ede4]
+                       focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#c9a96e]"
+              >
+                {%- if collection.featured_image -%}
+                  <img
+                    src="{{ collection.featured_image | image_url: width: 500 }}"
+                    alt="{{ collection.featured_image.alt | escape | default: collection.title }}"
+                    width="500" height="667"
+                    loading="lazy" decoding="async"
+                    class="w-full h-full object-cover object-center
+                           transition-transform duration-700 group-hover:scale-[1.05]"
+                  >
+                {%- else -%}
+                  <div class="w-full h-full bg-gradient-to-br from-[#ede7de] to-[#ddd0c4]"></div>
+                {%- endif -%}
+                <div class="absolute inset-0 bg-gradient-to-t from-black/55 to-transparent pointer-events-none"></div>
+                <div class="absolute inset-x-0 bottom-0 p-4">
+                  <h3 class="text-[14px] font-light text-white leading-snug"
+                      style="font-family:'Playfair Display',Georgia,serif;">
+                    {{ collection.title }}
+                  </h3>
+                </div>
+              </a>
+            {%- endfor -%}
+          </div>
+        </div>
+      {%- endif -%}
+
+    {%- endif -%}
+
+  </div>
+</div>
 
 {% schema %}
 {
-  "name": "t:general.search",
-  "settings": []
+  "name": "Search",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Search Bar"
+    },
+    {
+      "type": "text",
+      "id": "placeholder",
+      "label": "Input placeholder",
+      "default": "Search products, articles..."
+    },
+    {
+      "type": "select",
+      "id": "search_type",
+      "label": "Search type",
+      "options": [
+        { "value": "product,article,page", "label": "Products, Articles & Pages" },
+        { "value": "product",              "label": "Products only" },
+        { "value": "product,article",      "label": "Products & Articles" }
+      ],
+      "default": "product,article,page"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_type_filters",
+      "label": "Show type filter tabs",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Results Grid"
+    },
+    {
+      "type": "select",
+      "id": "grid_columns",
+      "label": "Columns on desktop",
+      "options": [
+        { "value": "3", "label": "3 columns" },
+        { "value": "4", "label": "4 columns" }
+      ],
+      "default": "3"
+    },
+    {
+      "type": "range",
+      "id": "results_per_page",
+      "label": "Results per page",
+      "min": 8,
+      "max": 48,
+      "step": 4,
+      "default": 20
+    },
+    {
+      "type": "header",
+      "content": "Empty / Pre-search State"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_suggestions",
+      "label": "Show popular search suggestions",
+      "default": true
+    },
+    { "type": "text", "id": "suggestion_1", "label": "Suggestion 1", "default": "Kurta Sets" },
+    { "type": "text", "id": "suggestion_2", "label": "Suggestion 2", "default": "Sherwanis" },
+    { "type": "text", "id": "suggestion_3", "label": "Suggestion 3", "default": "Festive Edit" },
+    { "type": "text", "id": "suggestion_4", "label": "Suggestion 4", "default": "Bandhgala" },
+    { "type": "text", "id": "suggestion_5", "label": "Suggestion 5", "default": "New Arrivals" },
+    { "type": "text", "id": "suggestion_6", "label": "Suggestion 6" },
+    {
+      "type": "checkbox",
+      "id": "show_featured_collections",
+      "label": "Show featured collections below search",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "featured_heading",
+      "label": "Collections heading",
+      "default": "Browse Collections"
+    }
+  ],
+  "presets": [
+    { "name": "Search", "category": "Search" }
+  ]
 }
 {% endschema %}
