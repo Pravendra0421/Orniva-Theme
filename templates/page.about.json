@@ -1,10 +1,7 @@
 {
   "sections": {
     "main": {
-      "type": "about",
-      "settings": {
-        "hero_heading": "Crafted with intention."
-      }
+      "type": "about"
     }
   },
   "order": [

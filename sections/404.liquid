@@ -1,23 +1,64 @@
-{% comment %}
-  This section is used in the 404 template to render page shown when customers
-  enter an invalid store URL.
+<div class="bg-[#F0EFEB]/85 min-h-[80vh] flex items-center justify-center px-4 sm:px-6 lg:px-8 font-sans">
+  <div class="max-w-max mx-auto text-center">
+    <div class="flex items-center justify-center gap-4 mb-8">
+      <span class="text-7xl md:text-9xl font-serif text-gray-900 leading-none">4</span>
+      <div class="w-16 h-16 md:w-24 md:h-24 bg-orange-500 rounded-full flex items-center justify-center animate-pulse">
+        <svg class="w-8 h-8 md:w-12 md:h-12 text-white" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M15.182 16.318A4.486 4.486 0 0012.016 15a4.486 4.486 0 00-3.198 1.318M21 12a9 9 0 11-18 0 9 9 0 0118 0zM9.75 9.75c0 .414-.168.75-.375.75s-.375-.336-.375-.75.168-.75.375-.75.375.336.375.75zm-.375 0h.008v.015h-.008V9.75zm5.625 0c0 .414-.168.75-.375.75s-.375-.336-.375-.75.168-.75.375-.75.375.336.375.75zm-.375 0h.008v.015h-.008V9.75z"/>
+        </svg>
+      </div>
+      <span class="text-7xl md:text-9xl font-serif text-gray-900 leading-none">4</span>
+    </div>
 
-  https://shopify.dev/docs/storefronts/themes/architecture/templates/404
-{% endcomment %}
+    <h1 class="text-2xl md:text-4xl font-bold text-gray-900 tracking-tight mb-4">
+      {{ 'general.404.title' | t | default: "Oops! Page not found." }}
+    </h1>
+    
+    <p class="text-base text-gray-600 mb-10 max-w-md mx-auto leading-relaxed">
+      {{ 'general.404.subtext' | t | default: "The page you are looking for might have been removed, had its name changed, or is temporarily unavailable." }}
+    </p>
 
-<h1>{{ '404.title' | t }}</h1>
+    <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+      <a href="{{ routes.root_url }}" 
+         class="w-full sm:w-auto bg-gray-900 text-white font-bold tracking-widest uppercase text-xs px-8 py-4 hover:bg-gray-700 transition-all duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-500">
+        Return Home
+      </a>
+      
+      <a href="{{ routes.all_products_collection_url }}" 
+         class="w-full sm:w-auto border border-gray-900 text-gray-900 font-bold tracking-widest uppercase text-xs px-8 py-4 hover:bg-gray-900 hover:text-white transition-all duration-200">
+        {{ 'general.404.link' | t | default: "Continue Shopping" }}
+      </a>
+    </div>
 
-<p>
-  {{ '404.not_found' | t }}
-</p>
-
-<a href="{{ routes.all_products_collection_url }}">
-  {{ '404.back_to_shopping' | t }}
-</a>
+    <div class="mt-16 pt-8 border-t border-gray-200">
+      <p class="text-xs text-gray-400 uppercase tracking-[0.2em]">
+        {{ section.settings.company_name | default: "Orniva" }} — Est. 2026
+      </p>
+    </div>
+  </div>
+</div>
 
 {% schema %}
 {
-  "name": "t:general.404",
-  "settings": []
+  "name": "404 Error Page",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "company_name",
+      "label": "Company Name",
+      "default": "Orniva"
+    },
+    {
+      "type": "select",
+      "id": "status",
+      "label": "Status Type",
+      "options": [
+        { "value": "Pending", "label": "Pending" },
+        { "value": "Approved", "label": "Approved" }
+      ],
+      "default": "Approved"
+    }
+  ]
 }
 {% endschema %}
