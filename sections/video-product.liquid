@@ -1,0 +1,429 @@
+<section
+  id="daily-routine-{{ section.id }}"
+  class="daily-routine relative w-full overflow-hidden"
+  aria-label="{{ section.settings.section_title }}"
+>
+
+  {%- if section.settings.section_title != blank -%}
+    <h2 class="text-center font-semibold text-gray-800 py-6 text-2xl tracking-tight">
+      {{ section.settings.section_title }}
+    </h2>
+  {%- endif -%}
+  <div class="relative w-full rounded-2xl overflow-hidden mx-auto"
+       style="max-width: {{ section.settings.max_width }}px;">
+    {%- if section.settings.video_url != blank -%}
+      <video
+        class="w-full object-cover block"
+        style="aspect-ratio: {{ section.settings.video_aspect_ratio }}; max-height: {{ section.settings.video_max_height }}px;"
+        autoplay
+        muted
+        loop
+        playsinline
+        preload="none"
+        poster="{{ section.settings.video_poster | img_url: '1600x' }}"
+        aria-hidden="true"
+      >
+        <source src="{{ section.settings.video_url }}" type="video/mp4">
+      </video>
+    {%- elsif section.settings.video_shopify != blank -%}
+      {{- section.settings.video_shopify | video_tag:
+          autoplay: true,
+          muted: true,
+          loop: true,
+          playsinline: true,
+          preload: 'none',
+          class: 'w-full object-cover block',
+          style: 'aspect-ratio:' | append: section.settings.video_aspect_ratio | append: '; max-height:' | append: section.settings.video_max_height | append: 'px;'
+      -}}
+    {%- else -%}
+      <div class="w-full bg-gray-200 flex items-center justify-center"
+           style="aspect-ratio: {{ section.settings.video_aspect_ratio }}; max-height: {{ section.settings.video_max_height }}px;">
+        <span class="text-gray-400 text-sm">Add a video in section settings</span>
+      </div>
+    {%- endif -%}
+
+    <div class="absolute inset-0 bg-black"
+         style="opacity: {{ section.settings.overlay_opacity | divided_by: 100.0 }};"
+         aria-hidden="true"></div>
+
+    {%- if section.settings.show_pause_button -%}
+      <button
+        class="daily-routine__pause absolute top-4 left-4 z-20 w-9 h-9 rounded-full bg-white bg-opacity-60 hover:bg-opacity-90 flex items-center justify-center transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-white"
+        aria-label="Pause background video"
+        data-action="pause-video"
+      >
+        <svg class="pause-icon w-4 h-4 text-gray-800" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
+        </svg>
+        <svg class="play-icon w-4 h-4 text-gray-800 hidden" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M8 5v14l11-7z"/>
+        </svg>
+      </button>
+    {%- endif -%}
+
+    {%- if section.blocks.size > 0 -%}
+      <div class="daily-routine__strip absolute bottom-0 left-0 right-0 z-10 pb-5 overflow-hidden">
+        <div
+          class="daily-routine__track flex gap-4 px-4"
+          style="
+            --marquee-speed: {{ section.settings.marquee_speed }}s;
+            animation: dr-marquee var(--marquee-speed) linear infinite;
+            width: max-content;
+          "
+          aria-label="Featured products"
+          role="list"
+        >
+          {%- for i in (1..2) -%}
+            {%- for block in section.blocks -%}
+              {%- if block.type == 'product_card' -%}
+                {%- assign card_product = block.settings.product -%}
+                <div
+                  class="daily-routine__card flex-none flex items-center gap-3 bg-white rounded-2xl shadow-lg px-4 py-3 cursor-pointer hover:shadow-xl transition-shadow duration-200 focus-within:ring-2 focus-within:ring-offset-1 focus-within:ring-gray-400"
+                  style="min-width: 220px; max-width: 260px;"
+                  role="listitem"
+                  {{ block.shopify_attributes }}
+                >
+                  <div class="flex-none w-14 h-14 rounded-xl overflow-hidden bg-gray-100">
+                    {%- if card_product != blank -%}
+                      {%- assign img = card_product.featured_image -%}
+                      {%- if img != blank -%}
+                        <img
+                          src="{{ img | img_url: '120x120', crop: 'center' }}"
+                          alt="{{ img.alt | escape }}"
+                          width="56"
+                          height="56"
+                          loading="lazy"
+                          decoding="async"
+                          class="w-full h-full object-cover"
+                        >
+                      {%- else -%}
+                        {{ 'product-1' | placeholder_svg_tag: 'w-full h-full object-cover text-gray-300' }}
+                      {%- endif -%}
+                    {%- elsif block.settings.custom_image != blank -%}
+                      <img
+                        src="{{ block.settings.custom_image | img_url: '120x120', crop: 'center' }}"
+                        alt="{{ block.settings.custom_title | escape }}"
+                        width="56"
+                        height="56"
+                        loading="lazy"
+                        decoding="async"
+                        class="w-full h-full object-cover"
+                      >
+                    {%- else -%}
+                      {{ 'product-1' | placeholder_svg_tag: 'w-full h-full object-cover text-gray-300' }}
+                    {%- endif -%}
+                  </div>
+
+                  <div class="flex-1 min-w-0">
+                    <p class="text-xs font-semibold text-gray-400 uppercase tracking-widest truncate">
+                      {%- if card_product != blank -%}
+                        {{ card_product.vendor }}
+                      {%- else -%}
+                        {{ block.settings.custom_vendor }}
+                      {%- endif -%}
+                    </p>
+                    <p class="text-sm font-semibold text-gray-900 leading-tight line-clamp-2 mt-0.5">
+                      {%- if card_product != blank -%}
+                        {{ card_product.title }}
+                      {%- else -%}
+                        {{ block.settings.custom_title }}
+                      {%- endif -%}
+                    </p>
+                    <p class="text-sm text-gray-700 mt-1">
+                      {%- if card_product != blank -%}
+                        {%- if card_product.price_varies -%}
+                          From {{ card_product.price_min | money }}
+                        {%- else -%}
+                          {{ card_product.price | money }}
+                        {%- endif -%}
+                      {%- else -%}
+                        {{ block.settings.custom_price }}
+                      {%- endif -%}
+                    </p>
+                  </div>
+
+                  <div class="flex-none flex flex-col items-center gap-2">
+                    {%- if card_product != blank -%}
+                      <a
+                        href="{{ card_product.url }}"
+                        class="w-8 h-8 rounded-full border border-gray-200 flex items-center justify-center hover:bg-gray-50 transition-colors"
+                        aria-label="View {{ card_product.title | escape }}"
+                      >
+                        <svg class="w-4 h-4 text-gray-700" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" aria-hidden="true">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007z"/>
+                        </svg>
+                      </a>
+                    {%- endif -%}
+                    <button
+                      class="w-8 h-8 rounded-full border border-gray-200 flex items-center justify-center hover:bg-gray-50 transition-colors"
+                      aria-label="Quick add"
+                      data-product-id="{%- if card_product != blank -%}{{ card_product.id }}{%- endif -%}"
+                    >
+                      <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12h15m-7.5-7.5v15"/>
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+              {%- endif -%}
+            {%- endfor -%}
+          {%- endfor -%}
+        </div>
+      </div>
+    {%- endif -%}
+  </div>
+
+  {%- if section.settings.cta_label != blank and section.settings.cta_url != blank -%}
+    <div class="flex justify-center mt-6 pb-8">
+      <a
+        href="{{ section.settings.cta_url }}"
+        class="text-xs font-semibold tracking-widest uppercase border-b border-gray-800 pb-0.5 text-gray-800 hover:text-gray-500 hover:border-gray-500 transition-colors duration-200"
+      >
+        {{ section.settings.cta_label }}
+      </a>
+    </div>
+  {%- endif -%}
+
+</section>
+
+<style>
+  @keyframes dr-marquee {
+    0%   { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+  .daily-routine__strip:hover .daily-routine__track {
+    animation-play-state: paused;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .daily-routine__track {
+      animation: none !important;
+      flex-wrap: wrap;
+    }
+  }
+</style>
+
+<script>
+(function () {
+  var section = document.getElementById('daily-routine-{{ section.id }}');
+  if (!section) return;
+
+  // Pause / play button
+  var btn = section.querySelector('[data-action="pause-video"]');
+  var video = section.querySelector('video');
+  if (btn && video) {
+    btn.addEventListener('click', function () {
+      if (video.paused) {
+        video.play();
+        btn.querySelector('.pause-icon').classList.remove('hidden');
+        btn.querySelector('.play-icon').classList.add('hidden');
+        btn.setAttribute('aria-label', 'Pause background video');
+      } else {
+        video.pause();
+        btn.querySelector('.pause-icon').classList.add('hidden');
+        btn.querySelector('.play-icon').classList.remove('hidden');
+        btn.setAttribute('aria-label', 'Play background video');
+      }
+    });
+  }
+
+  // Pause video if user prefers reduced motion
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches && video) {
+    video.pause();
+  }
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Routine Video",
+  "tag": "section",
+  "class": "section-daily-routine",
+  "limit": 1,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section"
+    },
+    {
+      "type": "text",
+      "id": "section_title",
+      "label": "Heading",
+      "default": "Your Daily Routine"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background colour",
+      "default": "#fdf0ed"
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Max container width (px)",
+      "min": 800,
+      "max": 1600,
+      "step": 40,
+      "default": 1400
+    },
+    {
+      "type": "header",
+      "content": "Video"
+    },
+    {
+      "type": "video",
+      "id": "video_shopify",
+      "label": "Video (Shopify-hosted)"
+    },
+    {
+      "type": "text",
+      "id": "video_url",
+      "label": "Video URL (external .mp4 fallback)",
+      "info": "Used only if no Shopify-hosted video is set."
+    },
+    {
+      "type": "image_picker",
+      "id": "video_poster",
+      "label": "Video poster / fallback image"
+    },
+    {
+      "type": "select",
+      "id": "video_aspect_ratio",
+      "label": "Aspect ratio",
+      "options": [
+        { "value": "16/9",  "label": "16:9 — Widescreen" },
+        { "value": "21/9",  "label": "21:9 — Cinematic" },
+        { "value": "4/3",   "label": "4:3 — Classic" },
+        { "value": "3/2",   "label": "3:2 — Photo" }
+      ],
+      "default": "16/9"
+    },
+    {
+      "type": "range",
+      "id": "video_max_height",
+      "label": "Max video height (px)",
+      "min": 300,
+      "max": 900,
+      "step": 20,
+      "default": 720
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "label": "Dark overlay opacity",
+      "min": 0,
+      "max": 60,
+      "step": 5,
+      "default": 15,
+      "info": "0 = no overlay, 60 = darkest"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_pause_button",
+      "label": "Show pause / play button",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Marquee"
+    },
+    {
+      "type": "range",
+      "id": "marquee_speed",
+      "label": "Scroll speed (seconds for one loop)",
+      "min": 10,
+      "max": 80,
+      "step": 5,
+      "default": 30,
+      "info": "Lower = faster"
+    },
+    {
+      "type": "header",
+      "content": "Call to action"
+    },
+    {
+      "type": "text",
+      "id": "cta_label",
+      "label": "Button label",
+      "default": "View All Products"
+    },
+    {
+      "type": "url",
+      "id": "cta_url",
+      "label": "Button URL"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "product_card",
+      "name": "Product Card",
+      "limit": 12,
+      "settings": [
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Product",
+          "info": "Leave blank to use custom fields below."
+        },
+        {
+          "type": "header",
+          "content": "Custom (if no product selected)"
+        },
+        {
+          "type": "image_picker",
+          "id": "custom_image",
+          "label": "Custom image"
+        },
+        {
+          "type": "text",
+          "id": "custom_vendor",
+          "label": "Brand name",
+          "default": "BRAND"
+        },
+        {
+          "type": "text",
+          "id": "custom_title",
+          "label": "Product title",
+          "default": "Product Name"
+        },
+        {
+          "type": "text",
+          "id": "custom_price",
+          "label": "Price text",
+          "default": "$00.00"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Daily Routine Video",
+      "blocks": [
+        {
+          "type": "product_card",
+          "settings": {
+            "custom_vendor": "BKIND",
+            "custom_title": "Algae Peel-Off Mask",
+            "custom_price": "$115.00"
+          }
+        },
+        {
+          "type": "product_card",
+          "settings": {
+            "custom_vendor": "MOKOSH",
+            "custom_title": "Active Toning Essence",
+            "custom_price": "$59.00"
+          }
+        },
+        {
+          "type": "product_card",
+          "settings": {
+            "custom_vendor": "MOKOSH",
+            "custom_title": "Figa Smoothing Face Cream",
+            "custom_price": "From $70.00"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

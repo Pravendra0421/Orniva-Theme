@@ -32,6 +32,9 @@
     assign width = width | default: image.width
   endunless
 
+  assign loading = loading | default: 'lazy'
+  assign decoding = decoding | default: 'async'
+
   if url
     assign wrapper = 'a'
   else
@@ -45,7 +48,10 @@
     href="{{ url }}"
   {% endif %}
 >
-  {{ image | image_url: width: width, height: height, crop: crop | image_tag }}
+  {{ image
+    | image_url: width: width, height: height, crop: crop
+    | image_tag: loading: loading, decoding: decoding, fetchpriority: fetchpriority
+  }}
 </{{ wrapper }}>
 
 {% stylesheet %}
