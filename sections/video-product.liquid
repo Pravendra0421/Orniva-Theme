@@ -1,7 +1,6 @@
 <section
   id="daily-routine-{{ section.id }}"
   class="daily-routine relative w-full overflow-hidden"
-  aria-label="{{ section.settings.section_title }}"
 >
 
   {%- if section.settings.section_title != blank -%}
@@ -11,6 +10,8 @@
   {%- endif -%}
   <div class="relative w-full rounded-2xl overflow-hidden mx-auto"
        style="max-width: {{ section.settings.max_width }}px;">
+
+    {%- comment -%} Background Video {%- endcomment -%}
     {%- if section.settings.video_url != blank -%}
       <video
         class="w-full object-cover block"
@@ -36,16 +37,19 @@
           style: 'aspect-ratio:' | append: section.settings.video_aspect_ratio | append: '; max-height:' | append: section.settings.video_max_height | append: 'px;'
       -}}
     {%- else -%}
+      {%- comment -%} Fallback placeholder {%- endcomment -%}
       <div class="w-full bg-gray-200 flex items-center justify-center"
            style="aspect-ratio: {{ section.settings.video_aspect_ratio }}; max-height: {{ section.settings.video_max_height }}px;">
         <span class="text-gray-400 text-sm">Add a video in section settings</span>
       </div>
     {%- endif -%}
 
+    {%- comment -%} Dark overlay {%- endcomment -%}
     <div class="absolute inset-0 bg-black"
          style="opacity: {{ section.settings.overlay_opacity | divided_by: 100.0 }};"
          aria-hidden="true"></div>
 
+    {%- comment -%} Pause/Play Button {%- endcomment -%}
     {%- if section.settings.show_pause_button -%}
       <button
         class="daily-routine__pause absolute top-4 left-4 z-20 w-9 h-9 rounded-full bg-white bg-opacity-60 hover:bg-opacity-90 flex items-center justify-center transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-white"
@@ -61,6 +65,7 @@
       </button>
     {%- endif -%}
 
+    {%- comment -%} ── MARQUEE PRODUCT STRIP ── {%- endcomment -%}
     {%- if section.blocks.size > 0 -%}
       <div class="daily-routine__strip absolute bottom-0 left-0 right-0 z-10 pb-5 overflow-hidden">
         <div
@@ -73,6 +78,7 @@
           aria-label="Featured products"
           role="list"
         >
+          {%- comment -%} Render blocks twice for seamless loop {%- endcomment -%}
           {%- for i in (1..2) -%}
             {%- for block in section.blocks -%}
               {%- if block.type == 'product_card' -%}
@@ -83,6 +89,7 @@
                   role="listitem"
                   {{ block.shopify_attributes }}
                 >
+                  {%- comment -%} Product Image {%- endcomment -%}
                   <div class="flex-none w-14 h-14 rounded-xl overflow-hidden bg-gray-100">
                     {%- if card_product != blank -%}
                       {%- assign img = card_product.featured_image -%}
@@ -114,6 +121,7 @@
                     {%- endif -%}
                   </div>
 
+                  {%- comment -%} Product Info {%- endcomment -%}
                   <div class="flex-1 min-w-0">
                     <p class="text-xs font-semibold text-gray-400 uppercase tracking-widest truncate">
                       {%- if card_product != blank -%}
@@ -142,6 +150,7 @@
                     </p>
                   </div>
 
+                  {%- comment -%} Cart / Link icon {%- endcomment -%}
                   <div class="flex-none flex flex-col items-center gap-2">
                     {%- if card_product != blank -%}
                       <a
@@ -173,6 +182,7 @@
     {%- endif -%}
   </div>
 
+  {%- comment -%} View All CTA {%- endcomment -%}
   {%- if section.settings.cta_label != blank and section.settings.cta_url != blank -%}
     <div class="flex justify-center mt-6 pb-8">
       <a
@@ -186,14 +196,17 @@
 
 </section>
 
+{%- comment -%} ── CSS: Marquee keyframe via inline style tag ── {%- endcomment -%}
 <style>
   @keyframes dr-marquee {
     0%   { transform: translateX(0); }
     100% { transform: translateX(-50%); }
   }
+  /* Pause on hover */
   .daily-routine__strip:hover .daily-routine__track {
     animation-play-state: paused;
   }
+  /* Respect reduced-motion */
   @media (prefers-reduced-motion: reduce) {
     .daily-routine__track {
       animation: none !important;
@@ -202,6 +215,7 @@
   }
 </style>
 
+{%- comment -%} ── Minimal JS: Pause button + reduced-motion respect ── {%- endcomment -%}
 <script>
 (function () {
   var section = document.getElementById('daily-routine-{{ section.id }}');
@@ -254,7 +268,7 @@
       "type": "color",
       "id": "bg_color",
       "label": "Background colour",
-      "default": "#fdf0ed"
+      "default": "#ffffff"
     },
     {
       "type": "range",
